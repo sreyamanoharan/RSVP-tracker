@@ -1,0 +1,59 @@
+services:
+
+  db:
+    image: mysql:8.0
+    container_name: meetup_mysql
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: meetup_db
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./backend/db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+  backend:
+    build: ./backend
+    container_name: meetup_backend
+
+    ports:
+      - "5000:5000"
+
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: meetup_db
+      JWT_SECRET: your_secret_key
+
+    depends_on:
+      db:
+        condition: service_healthy
+        
+  frontend:
+    build: ./frontend
+    container_name: meetup_frontend
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      NEXT_PUBLIC_API_URL: "http://localhost:5000/api"
+
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
