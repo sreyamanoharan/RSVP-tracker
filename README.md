@@ -56,6 +56,19 @@ A full-stack web application for creating and managing local meetup events and a
 - Docker Compose
 
 
+## Test Login Credentials
+
+Use the following seeded accounts to log in and test the application:
+
+**User 1**
+- Email: sreya@gmail.com
+- Password: Sreya@123
+
+**User 2**
+- Email: alex@gmail.com
+- Password: Alex@123
+
+
 ## Setup
 
 ### Requirements
@@ -63,9 +76,10 @@ A full-stack web application for creating and managing local meetup events and a
 - Docker
 - Docker Compose
 
+
 ### Run the Application
 
-Clone the repository and run:
+After cloning the repository, run:
 
 ```bash
 docker compose up
